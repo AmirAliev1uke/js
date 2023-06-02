@@ -23,12 +23,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void add(ArrayList<Integer> roles, String name, String lastName, String password, String email) {
+    public void add(ArrayList<Integer> roles, String name, String lastName, String password, String email, Integer age) {
         Set<Role> roleSet = new HashSet<>();
         for (Integer roleId : roles) {
             roleSet.add(new Role(roleId));
         }
-        User user = new User(name, password, email, lastName, roleSet);
+        User user = new User(name, password, email, lastName, age, roleSet);
         user.setRoles(roleSet);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDAO.add(user);
@@ -36,11 +36,11 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User getUserById(Long id) {
+    public User getUserById(Integer id) {
         return userDAO.getUserById(id);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<User> listUsers() {
         return userDAO.listUsers();
@@ -48,40 +48,45 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateUser(ArrayList<Integer> roles, String name, String lastName, String password, String email) {
+    public void updateUser(ArrayList<Integer> roles, String name, String lastName, String password, String email, Integer age, Integer id) {
         Set<Role> roleSet = new HashSet<>();
         for (Integer roleId : roles) {
             roleSet.add(new Role(roleId));
         }
-        User user = userDAO.getUserByName(name);
+        User user = userDAO.getUserById(id);
         user.setRoles(roleSet);
         user.setEmail(email);
         user.setName(name);
         user.setLastName(lastName);
-        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setAge(age);
 
         Set<Role> roleSet1 = new HashSet<>();
         for (Role role : user.getRoles()) {
             roleSet1.add(roleDAO.getById(role.getId()));
         }
         user.setRoles(roleSet1);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDAO.updateUser(user);
     }
 
     @Transactional
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(Integer id) {
         userDAO.deleteUser(id);
     }
 
     @Override
     public User getUserByNamePass(String name, String password) {
-        return userDAO.getUserByNamePass(name,password);
+        return userDAO.getUserByNamePass(name, password);
     }
 
     @Override
     public User getUserByName(String name) {
         return userDAO.getUserByName(name);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userDAO.getUserByEmail(email);
     }
 }

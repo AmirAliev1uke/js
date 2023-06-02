@@ -12,10 +12,11 @@ public interface UserDAO {
 //        void deleteUser(Long id);
 
         void add(User user);
-        User getUserById(Long id);
+        User getUserById(Integer id);
         List<User> listUsers();
         void updateUser(User user);
-        void deleteUser(Long id);
+        void deleteUser(Integer id);
         User getUserByNamePass(String name, String password);
         User getUserByName(String name);
+        User getUserByEmail(String email);
 }

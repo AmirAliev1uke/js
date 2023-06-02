@@ -6,6 +6,7 @@ import ru.kata.spring.boot_security.demo.Model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 @Repository
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class UserDAOImpl  implements UserDAO {
     }
 
     @Override
-    public User getUserById(Long id) {
+    public User getUserById(Integer id) {
         return entityManager.find(User.class, id);
     }
 
@@ -34,7 +35,7 @@ public class UserDAOImpl  implements UserDAO {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(Integer id) {
         User user = entityManager.find(User.class, id);
         entityManager.remove(user);
     }
@@ -51,6 +52,13 @@ public class UserDAOImpl  implements UserDAO {
     public User getUserByName(String name) {
         return  (User) entityManager.createQuery("from User where name =: name")
                 .setParameter("name", name)
+                .getSingleResult();
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return  (User) entityManager.createQuery("from User where email =: email")
+                .setParameter("email", email)
                 .getSingleResult();
     }
 }

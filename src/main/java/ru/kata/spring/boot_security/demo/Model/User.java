@@ -20,15 +20,18 @@ import java.util.Set;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = "name")
+    private Integer id;
+
+    private Integer age;
+
     private String name;
-    @Column(name = "lastName")
-    private String lastName;
-    @Column(name = "email")
-    private String email;
-    @Column(name = "password")
+
     private String password;
+
+    private String email;
+
+    @Column(name = "last_name")
+    private String lastName;
 
     @ManyToMany
     @JoinTable(name = "users_roles",
@@ -37,17 +40,18 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
 
-     public User (String name, String lastName, String email, String password, Set<Role> roles) {
+    public User(String name, String password, String email, String lastName, Integer age, Set<Role> roles) {
         this.name = name;
-        this.lastName = lastName;
-        this.email = email;
         this.password = password;
+        this.email = email;
+        this.lastName = lastName;
         this.roles = roles;
+        this.age = age;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return roles;
     }
 
     @Override

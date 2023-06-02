@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping()
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class UsersController {
 
@@ -27,57 +27,35 @@ public class UsersController {
 
     @GetMapping("/user")
     public String userPage(Model model, Principal principal) {
-        model.addAttribute("user", userService.getUserByName(principal.getName()));
+        model.addAttribute("user", userService.getUserByEmail(principal.getName()));
         return "userPage";
     }
 
     @GetMapping("/admin")
     public String adminPage(Model model, Principal principal) {
-        model.addAttribute("admin", userService.getUserByName(principal.getName()));
-        return "adminPage";
-    }
-
-    @GetMapping("/admin/user_list")
-    public String getUsersList(Model model) {
+        model.addAttribute("user", userService.getUserByEmail(principal.getName()));
         model.addAttribute("users", userService.listUsers());
-        return "/userList";
-    }
-    @GetMapping("/admin/user_list/{id}")
-    public String showUser(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "/showUser";
-    }
-
-    @GetMapping("/admin/new_user")
-    public String newUser(@ModelAttribute("user") User user, Model model) {
         model.addAttribute("roles", roleService.roleList());
-        return "/addUser";
+        return "adminPage";
     }
 
     @PostMapping("/admin/new_user")
     public String addUser(@RequestParam ArrayList<Integer> roles, @RequestParam String name,
-                          @RequestParam String lastName, @RequestParam String password, @RequestParam String email) {
-        userService.add(roles, name, lastName, password, email);
-        return "redirect:/admin/user_list";
+                          @RequestParam String lastName, @RequestParam String password, @RequestParam String email, @RequestParam Integer age) {
+        userService.add(roles, name, lastName, password, email, age);
+        return "redirect:/admin";
     }
 
-    @GetMapping("/admin/user_list/{id}/update")
-    public String editUser(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("roles", roleService.roleList());
-        model.addAttribute("user", userService.getUserById(id));
-        return "/updateUser";
-    }
-
-    @PatchMapping("/admin/user_list/{id}")
+    @PatchMapping("/admin/save")
     public String updateUser(@RequestParam ArrayList<Integer> roles, @RequestParam String name,
-                             @RequestParam String lastName, @RequestParam String password, @RequestParam String email) {
-        userService.updateUser(roles, name, lastName, password, email);
-        return "redirect:/admin/user_list";
+                             @RequestParam String lastName, @RequestParam String password, @RequestParam String email, @RequestParam Integer age, @RequestParam Integer id) {
+        userService.updateUser(roles, name, lastName, password, email, age, id);
+        return "redirect:/admin";
     }
 
-    @DeleteMapping("/admin/user_list/{id}")
-    public String deleteUser(@PathVariable("id") Long id) {
+    @DeleteMapping("/admin/{id}")
+    public String deleteUser(@PathVariable("id") Integer id) {
         userService.deleteUser(id);
-        return "redirect:/admin/user_list";
+        return "redirect:/admin";
     }
 }

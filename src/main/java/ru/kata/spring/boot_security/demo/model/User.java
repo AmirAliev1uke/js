@@ -1,9 +1,8 @@
-package ru.kata.spring.boot_security.demo.Model;
+package ru.kata.spring.boot_security.demo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

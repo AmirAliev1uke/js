@@ -2,7 +2,8 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ru.kata.spring.boot_security.demo.model.User;
+import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.entities.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,15 +20,14 @@ public class UserDAOImpl  implements UserDAO {
     }
 
     @Override
-    public User getUserById(Integer id) {
-        return entityManager.find(User.class, id);
-    }
+    public User getUserById(Integer id) { return entityManager.find(User.class, id); }
 
     @Override
     public List<User> listUsers() {
         return entityManager.createQuery("from User", User.class).getResultList();
     }
 
+    @Transactional
     @Override
     public void updateUser(User user) {
         entityManager.merge(user);

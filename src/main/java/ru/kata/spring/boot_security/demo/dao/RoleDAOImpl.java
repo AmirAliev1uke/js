@@ -2,7 +2,7 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import ru.kata.spring.boot_security.demo.model.Role;
+import ru.kata.spring.boot_security.demo.entities.Role;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

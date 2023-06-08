@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.service;
+package ru.kata.spring.boot_security.demo.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.RoleDAO;
 import ru.kata.spring.boot_security.demo.dao.UserDAO;
-import ru.kata.spring.boot_security.demo.model.Role;
-import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.entities.Role;
+import ru.kata.spring.boot_security.demo.entities.User;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void add(ArrayList<Integer> roles, String name, String lastName, String password, String email, Integer age) {
+    public User add(ArrayList<Integer> roles, String name, String lastName, String password, String email, Integer age) {
         Set<Role> roleSet = new HashSet<>();
         for (Integer roleId : roles) {
             roleSet.add(new Role(roleId));
@@ -32,6 +32,15 @@ public class UserServiceImpl implements UserService {
         user.setRoles(roleSet);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDAO.add(user);
+        return user;
+    }
+
+    @Transactional
+    @Override
+    public User add(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDAO.add(user);
+        return user;
     }
 
     @Transactional
@@ -48,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateUser(ArrayList<Integer> roles, String name, String lastName, String password, String email, Integer age, Integer id) {
+    public User updateUser(ArrayList<Integer> roles, String name, String lastName, String password, String email, Integer age, Integer id) {
         Set<Role> roleSet = new HashSet<>();
         for (Integer roleId : roles) {
             roleSet.add(new Role(roleId));
@@ -67,12 +76,14 @@ public class UserServiceImpl implements UserService {
         }
         user.setRoles(roleSet1);
         userDAO.updateUser(user);
+        return user;
     }
 
     @Transactional
     @Override
-    public void deleteUser(Integer id) {
+    public User deleteUser(Integer id) {
         userDAO.deleteUser(id);
+        return null;
     }
 
     @Override
@@ -88,5 +99,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) {
         return userDAO.getUserByEmail(email);
+    }
+
+    @Override
+    public void updateUser(User updatedUser) {
+        userDAO.updateUser(updatedUser);
     }
 }
